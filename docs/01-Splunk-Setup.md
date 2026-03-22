@@ -5,7 +5,7 @@ After completing this guide, you'll have:
 - **Splunk Web UI** running at `http://localhost:8000` (or your VM's IP)
 - **Three custom indexes** — `sysmon`, `wineventlog`, `powershell` — receiving forwarded logs
 - **Universal Forwarders** on your AD-Lab Windows endpoints shipping Sysmon, Security, System, and PowerShell logs to Splunk over TCP port 9997
-- Detection-ready infrastructure for the rules in `detections/` and dashboards in `dashboards/`
+- Detection-ready infrastructure for the rules in [Detection-Engineering-Lab](https://github.com/develku/Detection-Engineering-Lab)
 
 > **What is Splunk Free?** Splunk Enterprise running without a paid license. It provides the same search engine, indexing, and SPL query language as the full product. The main limitations: **500 MB/day indexing cap** (plenty for a home lab with a few endpoints), no built-in alerting (you run saved searches manually or on a schedule), and no role-based access control beyond the single admin account. For learning SIEM operations, these limitations don't matter — the search and analysis experience is identical to what SOC teams use in production.
 
@@ -640,5 +640,5 @@ This is a lab environment, but understanding these tradeoffs prepares you for pr
 ## Next Steps
 
 - [Configure Log Sources](02-Log-Sources.md) — understand what each log source provides
-- [Deploy Detection Rules](03-Detection-Rules.md) — start detecting threats
-- [Run Attack Simulations](04-Attack-Simulations.md) — validate your detections
+- [Deploy Detection Rules](https://github.com/develku/Detection-Engineering-Lab) — start detecting threats
+- [Run Attack Simulations](https://github.com/develku/Attack-Simulation-Lab) — validate your detections
