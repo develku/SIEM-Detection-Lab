@@ -1,0 +1,92 @@
+# =============================================================================
+# SIEM Detection Lab — Splunk Server via Docker Compose
+# =============================================================================
+#
+# Deploys Splunk Enterprise (Free mode) as the SIEM for this lab.
+# The Splunk image is amd64-only. On Apple Silicon (M-series Macs),
+# Docker Desktop uses Rosetta 2 emulation via the platform flag below.
+#
+# What this gives you:
+#   - Splunk Web UI on http://localhost:8000
+#   - Forwarder receiving port on 9997
+#   - Management API on 8089
+#   - Three custom indexes: sysmon, wineventlog, powershell
+#   - Pre-loaded with configs from configs/
+#
+# Usage:
+#   docker compose up -d           # Start Splunk
+#   docker compose logs -f splunk  # Watch startup logs
+#   docker compose down            # Stop (data preserved in volume)
+#   docker compose down -v         # Stop and delete all data
+#
+# Prerequisites:
+#   - Docker Desktop (macOS/Windows) or Docker Engine (Linux)
+#   - At least 4GB RAM allocated to Docker
+#
+# =============================================================================
+
+services:
+  splunk:
+    # The official Splunk image is amd64-only (no native ARM64 build).
+    # On Apple Silicon (M-series Macs), Docker Desktop uses Rosetta 2 emulation
+    # via the platform flag below. Performance is ~2x slower than native but
+    # fully functional for a home lab.
+    image: splunk/splunk:latest
+    platform: linux/amd64
+    container_name: splunk-siem
+    hostname: splunk-siem
+
+    # Accept both the Splunk license and Splunk General Terms.
+    # Recent Splunk images require both flags or the container refuses to start.
+    # Terms: https://www.splunk.com/en_us/legal/splunk-general-terms.html
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD:-ChangeMeNow123!}
+      # License mode: "free" removes the need for a license key
+      # Free mode limits ingestion to 500MB/day — plenty for a home lab
+      - SPLUNK_LICENSE_URI=Free
+
+    ports:
+      # Web UI — open http://localhost:8000 in your browser
+      - "8000:8000"
+      # Forwarder receiving port — Windows endpoints send logs here
+      - "9997:9997"
+      # Management API — used by Splunk CLI and REST API
+      - "8089:8089"
+
+    volumes:
+      # Persist Splunk data across container restarts.
+      # Without this, you'd lose all indexed data when the container stops.
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+
+      # Mount our custom configs as a Splunk app.
+      # Why an app instead of system/local? The Splunk Docker image uses Ansible
+      # to provision configs at startup. Ansible does atomic file renames, which
+      # fail on Docker bind-mounted files (EBUSY: Device or resource busy).
+      # Mounting a directory as a Splunk app avoids this entirely — Ansible
+      # doesn't touch app directories, and Splunk merges app configs on top of
+      # system defaults automatically.
+      - ./configs/siem-lab:/opt/splunk/etc/apps/siem-lab
+
+    # Splunk can take 60-90 seconds to start. This health check tells Docker
+    # when the web UI is actually ready (not just that the container is running).
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+
+    # Restart automatically if the container crashes or the host reboots.
+    restart: unless-stopped
+
+# Named volumes persist data outside the container filesystem.
+# Even if you `docker compose down`, your indexed data survives.
+# Only `docker compose down -v` deletes volumes (and your data).
+volumes:
+  splunk-var:
+    name: siem-lab-splunk-var
+  splunk-etc:
+    name: siem-lab-splunk-etc

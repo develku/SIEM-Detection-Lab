@@ -1,0 +1,31 @@
+# Splunk data directories
+/opt/splunk/
+var/
+db/
+*.tgz
+*.deb
+*.msi
+
+# Credentials and secrets
+*.pem
+*.key
+*.env
+credentials.conf
+passwd
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large binary files
+*.pcap
+*.evtx
+*.raw
+
+# IDE
+.vscode/
+.idea/
+
+# Planning files
+.planning/
+plans/
