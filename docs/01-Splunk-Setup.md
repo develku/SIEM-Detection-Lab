@@ -406,7 +406,7 @@ Navigate to **Settings → Forwarding and Receiving → Receive data → Configu
 
 You should see port **9997** listed and enabled.
 
-![alt text](image.png)
+![Splunk Forwarding and Receiving settings showing port 9997 configured](../attachments/image.png)
 
 ```bash
 # Verify from CLI
@@ -422,7 +422,7 @@ tcp6       0      0 :::9997                 :::*                    LISTEN      
 
 Navigate to **Settings → Indexes** — confirm `sysmon`, `wineventlog`, `powershell` exist.
 
-![alt text](image-1.png)
+![Splunk Settings showing sysmon, wineventlog, and powershell indexes](../attachments/image-1.png)
 
 #### Check Firewall
 
@@ -492,7 +492,7 @@ Download the Splunk Universal Forwarder (`.msi` for Windows) from:
 
 **Download:** [https://www.splunk.com/en_us/download/universal-forwarder.html](https://www.splunk.com/en_us/download/universal-forwarder.html)
 
-![](./image-2.png)
+![Splunk Universal Forwarder download page showing Windows 64-bit MSI option](../attachments/image-2.png)
 
 > Same Splunk account as before. Select the **Windows (.msi) 64-bit** package.
 
@@ -523,7 +523,7 @@ The script configures these log channels:
 
 After finishing the installation process, you will see a confirmation message like below:
 
-![alt text](image-3.png)
+![Splunk Universal Forwarder deployment script completed successfully](../attachments/image-3.png)
 
 **Manual alternative:**
 

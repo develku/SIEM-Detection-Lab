@@ -68,14 +68,9 @@ The Security log is the foundation of any SOC. It tracks who logged in, what the
 
 ## Splunk Input Configuration
 
-Logs are forwarded via Splunk Universal Forwarder with this routing:
+Logs are forwarded via Splunk Universal Forwarder with index-time routing defined in [transforms.conf](../configs/siem-lab/local/transforms.conf):
 
-```
-Sysmon logs        → index=sysmon      (sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational)
-Security logs      → index=wineventlog (sourcetype=WinEventLog:Security)
-System logs        → index=wineventlog (sourcetype=WinEventLog:System)
-PowerShell logs    → index=powershell  (sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational)
-```
+![Log routing diagram showing 5 Windows log channels routing to 3 Splunk indexes via transforms.conf](../attachments/log-routing.png)
 
 See [configs/siem-lab/local/inputs.conf](../configs/siem-lab/local/inputs.conf) for the full configuration.
 

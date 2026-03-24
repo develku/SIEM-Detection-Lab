@@ -179,38 +179,7 @@ The [Detection-Engineering-Lab](https://github.com/develku/Detection-Engineering
 
 Here's the big picture — how data flows from an attack to an alert:
 
-```
-                    THE DETECTION PIPELINE
-
-  1. ATTACK HAPPENS          An attacker runs Mimikatz on a
-     on an endpoint           compromised Windows machine
-            │
-            ▼
-  2. SYSMON CAPTURES IT       Sysmon sees the process creation (Event ID 1),
-     as a detailed event      the LSASS memory access (Event ID 10),
-                              and records full command lines and hashes
-            │
-            ▼
-  3. SPLUNK UF FORWARDS IT    The Splunk Universal Forwarder running on the
-     to the Splunk server     endpoint ships the log to Splunk over TCP:9997
-            │
-            ▼
-  4. SPLUNK INDEXES IT        Splunk receives the event, parses it,
-     for fast searching       and stores it in the "sysmon" index
-            │
-            ▼
-  5. DETECTION RULE MATCHES   A scheduled SPL search runs every 5 minutes,
-     the suspicious pattern   looking for processes accessing LSASS memory
-            │
-            ▼
-  6. ALERT FIRES              Splunk creates an alert with severity,
-     and notifies the SOC     ATT&CK mapping, and relevant event details
-            │
-            ▼
-  7. ANALYST INVESTIGATES     You (the SOC analyst) review the alert,
-     using Splunk searches    pivot on the source host, check related events,
-                              and determine if it's a real attack or false positive
-```
+![Detection pipeline: Attack Happens → Sysmon Captures → UF Forwards → Splunk Indexes → Rule Matches → Alert Fires → You Investigate](../attachments/detection-pipeline.png)
 
 ### Which component handles what
 
@@ -297,4 +266,4 @@ These free and paid resources pair well with this lab:
 
 ---
 
-You've got this. Every expert SOC analyst started exactly where you are now — curious, motivated, and ready to learn. This lab gives you a safe environment to build real, demonstrable skills. Work through it step by step, don't rush, and remember: understanding _why_ a detection works matters more than memorizing SPL syntax.
+Your next step: open [01-Splunk-Setup.md](01-Splunk-Setup.md) and deploy your SIEM. Once Splunk is running and ingesting logs, come back to this guide's Study Path (Step 4 onward) and start reading detection rules against live data. Understanding _why_ a detection works matters more than memorizing SPL syntax — and having real logs to query makes the difference.
